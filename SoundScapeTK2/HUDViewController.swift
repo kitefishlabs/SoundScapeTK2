@@ -21,10 +21,8 @@ class HUDViewController: UIViewController {
     @IBOutlet weak var numActiveRegionsLabel: UILabel!
 
     @IBOutlet var mapView:MKMapView!
-//    private var locations: [MKPointAnnotation] = []
     
     var appDelegate: AppDelegate?
-//    var audioManager: AudioManager?
     var soundscapeData: SoundScapeData?
     var regionPins: [RegionPin] = []
 
@@ -34,7 +32,6 @@ class HUDViewController: UIViewController {
         self.regionPins = (soundscapeData?.regions.map{ RegionPin(title: $0.label,
                                                                   coordinate: CLLocationCoordinate2D(latitude: $0.lat,
                                                                                                      longitude: $0.lon))}) ?? []
-        NSLog(":: %d %d", (self.soundscapeData?.regions.count ?? 0), self.regionPins.count)
     }
 
     private lazy var locationManager: CLLocationManager = {
@@ -68,16 +65,6 @@ class HUDViewController: UIViewController {
         self.loadPins()
         mapView.addAnnotations(self.regionPins)
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
     
     var regionRadius: CLLocationDistance = 1000
     func centerMapOnLocation(location: CLLocation) {
@@ -100,16 +87,6 @@ extension HUDViewController: CLLocationManagerDelegate {
         accuracyLabel.text = String(mostRecentLocation.horizontalAccuracy)
         numActiveRegionsLabel.text = String(soundscapeData?.regions.count ?? 0)
         
-//        let annotation = MKPointAnnotation()
-//        annotation.coordinate = mostRecentLocation.coordinate
-    
-//        self.locations = [annotation]
-        
-//        while self.locations.count > 1 {
-//            let toRemove = self.locations.first!
-//            self.locations.remove(at: 0)
-//            mapView.removeAnnotation(toRemove)
-//        }
         print("most recent loc. update: " + String(mostRecentLocation.coordinate.latitude) + " " + String(mostRecentLocation.coordinate.longitude))
         
         let recentHits = self.soundscapeData?.testAllRegions(lat: mostRecentLocation.coordinate.latitude, lon: mostRecentLocation.coordinate.longitude) ?? []
@@ -128,12 +105,12 @@ extension HUDViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard let annotation = annotation as? RegionPin else { return nil }
         let identifier = "marker"
-        var view: MKMarkerAnnotationView
-        if let dequeuedView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView {
+        var view: MKAnnotationView = MKAnnotationView()
+        if let dequeuedView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) {
             dequeuedView.annotation = annotation
             view = dequeuedView
         } else {
-            view = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            view = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
             view.canShowCallout = true
             view.calloutOffset = CGPoint(x:-5, y:5)
             view.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
