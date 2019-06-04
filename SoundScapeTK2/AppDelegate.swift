@@ -7,15 +7,54 @@
 //
 
 import UIKit
+import libpd
+
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, PdReceiverDelegate {
 
     var window: UIWindow?
-
-
+    var audioController: PdAudioController?
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        // create soundscape data here
+        let soundscapeData = SoundScapeData()
+        
+        let audioManager = AudioManager(patch:"sampler4bank.pd")
+        audioManager.openPDPatch(patchString: audioManager.patchString)
+        
+        let dispatcher = PdDispatcher()
+        audioManager.dispatcher = dispatcher
+        
+        PdBase.setDelegate(dispatcher)
+
+        // get references to the 2 vcs that need ssdata and pass it
+        guard let tabBarController = window?.rootViewController as? UITabBarController,
+            let viewControllers = tabBarController.viewControllers else { return true }
+        
+        for (_, vc) in viewControllers.enumerated() {
+            if let navigationController = vc as? UINavigationController,
+                let regionsTableVC = navigationController.viewControllers.first as? RegionsTableViewController {
+                regionsTableVC.soundscapeData = soundscapeData
+            } else
+            if let hudVC = vc as? HUDViewController {
+                hudVC.soundscapeData = soundscapeData
+                hudVC.appDelegate = self
+                hudVC.audiomanager = audioManager
+            }
+        }
+        // call get-data to populate both ssdata vars linked above
+        soundscapeData.getJSONTestData()
+        
+        self.audioController = PdAudioController()
+        // Pd setup
+        self.audioController?.configurePlayback(withSampleRate: 48000,
+                                                numberChannels: 2,
+                                                inputEnabled: false,
+                                                mixingEnabled: false)
+        self.audioController?.print()
+        
         return true
     }
 
@@ -40,7 +79,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
+    
+    
+    
+    
 
-
+    func activateAudio(onFlag: Bool) {
+        self.audioController?.isActive = onFlag
+        if (self.audioController?.isActive ?? false) {
+            print("Audio is ON.")
+        } else {
+            print("Audio is OFF.")
+        }
+    }
+    
 }
 

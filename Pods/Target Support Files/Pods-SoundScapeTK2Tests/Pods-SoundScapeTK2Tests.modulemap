@@ -1,0 +1,6 @@
+framework module Pods_SoundScapeTK2Tests {
+  umbrella header "Pods-SoundScapeTK2Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,11 @@
+SoundScapeTK2
+
+Location-based interactive sound composition for iOS. Written in Swift. This is more or less an example or reference implementation. If you create a specific piece, you would likely copy and rename this repo and work from there.
+
+Still to be added:
+Synthesis
+Load json scores from your own server/service
+Various settings and details related to playback logic
+
+
+Copyright 2019, Thomas Stoll, distributed under MIT License.

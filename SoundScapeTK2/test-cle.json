@@ -1,0 +1,42 @@
+
+{
+    "origin" : { "lat" : 41.488256, "lon" : -81.740489, "rel" : 0 },
+    "regions" : [
+        {
+            "id" : 1,
+            "shape" : "CIRCLE",
+            "lat" : 41.488087,
+            "lon" : -81.739744,
+            "rad" : 0.0002,
+            "trig" : "01.wav",
+            "attack" : 1000,
+            "release" : 2000,
+            "lives" : 99,
+            "label" : "no1"
+        },
+        {
+            "id" : 2,
+            "shape" : "CIRCLE",
+            "lat" : 41.487910,
+            "lon" : -81.740677,
+            "rad" : 0.00036,
+            "trig" : "02_cymbal.wav",
+            "attack" : 1000,
+            "release" : 2000,
+            "lives" : 99,
+            "label" : "no2"
+        },
+        {
+            "id" : 3,
+            "shape" : "CIRCLE",
+            "lat" : 41.487802,
+            "lon" : -81.740581,
+            "rad" : 0.00036,
+            "trig" : "01.wav",
+            "attack" : 1000,
+            "release" : 2000,
+            "lives" : 99,
+            "label" : "no3"
+        }
+    ]
+}
